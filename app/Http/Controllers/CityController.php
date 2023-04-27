@@ -54,7 +54,7 @@ class CityController extends Controller {
 
         $cities_curl = curl_init();
         curl_setopt($cities_curl, CURLOPT_CAINFO, "C:\Users\sofia\Downloads\cacert.pem");
-        curl_setopt_array($cities_curl, $cities_options);
+        curl_setopt_array($cities_curl, $cities_options); 
         $response_cities = curl_exec($cities_curl);
         if (curl_errno($cities_curl)) {
             echo 'Error: ' . curl_error($cities_curl);
@@ -66,10 +66,12 @@ class CityController extends Controller {
         $state_model = State::where('name', $state)->first();
         $id_state = $state_model->id;
 
-        foreach($cities_array as $city) {
-            $existing_city = City::where('name', $city['city_name'])->first();
-            if (!$existing_city) {
-                DB::insert('INSERT INTO city (name, id_state) VALUES (?, ?)', [$city['city_name'], $id_state]);
+        if(!is_null($cities_array)) {
+            foreach($cities_array as $city) {
+                $existing_city = City::where('name', $city['city_name'])->first();
+                if (!$existing_city) {
+                    DB::insert('INSERT INTO city (name, id_state) VALUES (?, ?)', [$city['city_name'], $id_state]);
+                }
             }
         }
     }

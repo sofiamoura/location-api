@@ -68,11 +68,14 @@ class StateController extends Controller {
             return [];
         }
 
+        $i = 0;
         foreach($states_array as $state) {
+            if($i == 5) break;
             $existing_state = State::where('name', $state['state_name'])->first();
             if (!$existing_state) {
                 DB::insert('INSERT INTO state (name, id_country) VALUES (?, ?)', [$state['state_name'], $id_country]);
             }
+            $i++;
         }
     }
 }
