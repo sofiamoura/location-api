@@ -37,16 +37,30 @@ class LocationController extends Controller {
 
     public function get_locations() {
         $country = new Country();
-        $state = new State();
-        $city = new City();
-        if(!$country->exists() || !$state->exists() || !$city->exists()) $this->store_all_locations();
+        if(!$country->exists()) $this->store_all_locations();
 
         $countries = Country::all();
-        $states = State::all();
-        $cities = City::all();
     
-        return view('location_form', ['countries' => $countries, 'states' => $states, 'cities' => $cities]);
+        return view('location_form', ['countries' => $countries]);
     }
+
+    public function get_states(Request $request) {
+        $state = new State();
+        if(!$state->exists()) $this->store_all_locations();
+
+        $country = Country::find($request->country_id);
+        $states = $country->states();
+
+        return response()->json($states);
+    }
+
+    /* public function get_cities(int $state_id) {
+        $city = new City();
+        if(!$city->exists()) $this->store_all_locations();
+
+        $state = State::find($state_id);
+        $cities = $state->cities();
+    } */
 
     public function submit_location() {
         $country_name = request('country');

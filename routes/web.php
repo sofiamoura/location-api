@@ -15,4 +15,7 @@ use App\Http\Controllers\LocationController;
 */
 
 Route::get('/', [LocationController::class, 'get_locations']);
+Route::post('/get-states', [LocationController::class, 'get_states']);
+Route::post('/get-cities', [LocationController::class, 'get_cities']);
+
 Route::post('/', [LocationController::class, 'submit_location']);

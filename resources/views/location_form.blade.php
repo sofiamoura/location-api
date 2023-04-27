@@ -19,27 +19,40 @@
             <select id="country" name="country">
                 <option value="" disabled selected>select</option>
                 @foreach($countries as $country)
-                <option class="btn-check" name="country">{{ $country->name }}</option>
+                <option class="btn-check" name="country" value="{{ $country->id }}">{{ $country->name }}</option>
                 @endforeach
             </select>
 
             <label for="state">State: </label>
             <select id="state" name="state">
                 <option value="" disabled selected>select</option>
-                @foreach($states as $state)
-                <option class="btn-check" name="state">{{ $state->name }}</option>
-                @endforeach
             </select>
 
             <label for="city">City: </label>
             <select id="city" name="city">
                 <option value="" disabled selected>select</option>
-                @foreach($cities as $city)
-                <option class="btn-check" name="city">{{ $city->name }}</option>
-                @endforeach
             </select>
 
             <button type="submit" name="submit">Search</button>
         </form>
+
+        <script>
+            $(document).ready(function() {
+                $('#country').change(function(event) {
+                    var id_country = this.value
+                    $('#state').html('')
+                    
+                    $.ajax({
+                        url: "{{url('get-states')}}",
+                        type: "POST",
+                        daatType: 'json',
+                        data: {country_id: id_country,_token:"{{ csrf_token() }}"},
+                        success: function(response) {
+                            console.log(response)
+                        }
+                    })
+                })
+            })
+        </script>
     </body>
 </html>
