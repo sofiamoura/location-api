@@ -61,21 +61,18 @@ class StateController extends Controller {
         curl_close($states_curl);
         $states_array = json_decode($response_states, true);
 
-        $country_model = Country::where('name', $country)->first();
+        $country_model = Country::where('short_name', $country)->first();
         $id_country = $country_model->id;
 
         if($states_array == []) {
             return [];
         }
 
-        $i = 0;
         foreach($states_array as $state) {
-            if($i == 5) break;
             $existing_state = State::where('name', $state['state_name'])->first();
             if (!$existing_state) {
                 DB::insert('INSERT INTO state (name, id_country) VALUES (?, ?)', [$state['state_name'], $id_country]);
             }
-            $i++;
         }
     }
 }

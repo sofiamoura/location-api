@@ -39,40 +39,42 @@ class LocationController extends Controller {
         $country = new Country();
         if(!$country->exists()) $this->store_all_locations();
 
-        $countries = Country::all();
+        $countries = Country::orderBy('short_name', 'asc')->get();
     
-        return view('location_form', ['countries' => $countries]);
+        return view('location_form', ['countries' => $countries, 'states' => State::orderBy('name', 'asc')->get(), 'cities' => City::orderBy('name', 'asc')->get()]);
     }
 
-    public function get_states(Request $request) {
+    public function get_states(int $country_id) {
         $state = new State();
         if(!$state->exists()) $this->store_all_locations();
 
-        $country = Country::find($request->country_id);
+        $country = Country::find($country_id);
         $states = $country->states();
 
         return response()->json($states);
     }
 
-    /* public function get_cities(int $state_id) {
+    public function get_cities(int $state_id) {
         $city = new City();
         if(!$city->exists()) $this->store_all_locations();
 
         $state = State::find($state_id);
         $cities = $state->cities();
-    } */
 
-    public function submit_location() {
-        $country_name = request('country');
-        $state_name = request('state');
-        $city = request('city');
+        return response()->json($cities);
+    }
 
-        $state = State::where('name', $state_name)->first();
+    public function get_country(int $state_id) {
+        $state = State::find($state_id);
+        $country = Country::find($state->id_country);
 
-        $location = City::where('name', $city)->where('id_state', $state->id)->first();
+        return response()->json($country);
+    }
 
-        $country = Country::where('name', $country_name)->first();
+    public function get_state(int $city_id) {
+        $city = City::find($city_id);
+        $state = State::find($city->id_state);
 
-        echo "<img src='" . $country->flag . "' alt='Country Flag'>";
+        return response()->json($state);
     }
 }
