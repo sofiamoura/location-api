@@ -6,7 +6,7 @@ function get_states() {
     if(country_id) {
 
         // get request to retrieve its states
-        axios.get('/get_states/' + country_id)
+        axios.get('get_states/' + country_id)
         .then(response => {
             let states = response.data;
             
@@ -115,8 +115,6 @@ if(city_id) {
             flag.src = country.flag;
             let body = document.querySelector('body');
             body.appendChild(flag);
-
-            console.log(src);
         })
         .catch(error => {
             console.log(error);

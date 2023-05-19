@@ -4,7 +4,6 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <script src="https://cdn.jsdelivr.net/npm/city-timezones@1.1.1/citytimezones.min.js"></script>
         <script src="{{ asset('js/form.js') }}" defer></script>
 
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -42,6 +41,5 @@
                 @endforeach
             </select>
         </form>
-
     </body>
 </html>

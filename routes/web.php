@@ -15,8 +15,9 @@ use App\Http\Controllers\LocationController;
 */
 
 Route::get('/', [LocationController::class, 'get_locations']);
-Route::post('/', [LocationController::class, 'submit_location']);
-Route::get('/get_states/{country_id}', [LocationController::class, 'get_states']);
-Route::get('/get_cities/{state_id}', [LocationController::class, 'get_cities']);
+
+Route::get('get_states/{country_id}', [LocationController::class, 'get_states']);
+Route::get('get_cities/{state_id}', [LocationController::class, 'get_cities']);
+
 Route::get('/get_country/{state_id}', [LocationController::class, 'get_country']);
 Route::get('/get_state/{city_id}', [LocationController::class, 'get_state']);

@@ -35,12 +35,20 @@ class LocationController extends Controller {
         }
     }
 
-    public function get_locations() {
+    public function get_locations(Request $request) {
         $country = new Country();
         if(!$country->exists()) $this->store_all_locations();
 
         $countries = Country::orderBy('short_name', 'asc')->get();
     
+        if ($request->wantsJson()) {
+            return response()->json([
+                'countries' => $countries,
+                'states' => State::orderBy('name', 'asc')->get(),
+                'cities' => City::orderBy('name', 'asc')->get()
+            ]);
+        }
+
         return view('location_form', ['countries' => $countries, 'states' => State::orderBy('name', 'asc')->get(), 'cities' => City::orderBy('name', 'asc')->get()]);
     }
 
