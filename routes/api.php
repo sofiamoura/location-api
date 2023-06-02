@@ -21,5 +21,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::get('/', [LocationController::class, 'get_locations']);
 
+Route::get('get_countries', [LocationController::class, 'get_countries']);
 Route::get('get_states/{country_id}', [LocationController::class, 'get_states']);
 Route::get('get_cities/{state_id}', [LocationController::class, 'get_cities']);

@@ -13,7 +13,7 @@ class State extends Model
     protected $table = 'state';
 
     protected $fillable = [
-        'id', 'name', 'id_country'
+        'id', 'name', 'id_country', 'geoname_id'
     ];
 
     use HasFactory;

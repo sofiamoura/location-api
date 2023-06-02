@@ -7,13 +7,16 @@ CREATE TABLE country (
     name VARCHAR(255) NOT NULL,
     short_name VARCHAR(255) NOT NULL,
     phone_code VARCHAR(255) NOT NULL,
-    flag VARCHAR(255) NOT NULL
+    flag VARCHAR(255) NOT NULL,
+    geoname_id INT NOT NULL
 );
 
 CREATE TABLE state (
     id INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(255),
+    geoname_id INT NOT NULL,
     id_country INT NOT NULL,
+    geoname_id INT NOT NULL,
     FOREIGN KEY (id_country) REFERENCES country(id)
 );
 
@@ -24,9 +27,4 @@ CREATE TABLE city (
     id_state INT,
     id_country INT,
     FOREIGN KEY (id_state) REFERENCES state(id),
-    FOREIGN KEY (id_country) REFERENCES country(id),
-    CHECK (
-        (id_state IS NOT NULL AND id_country IS NULL) OR
-        (id_country IS NOT NULL AND id_state IS NULL)
-    )
 );

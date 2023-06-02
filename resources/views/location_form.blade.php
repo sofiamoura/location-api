@@ -21,7 +21,7 @@
             <select id="country" name="country" onchange="get_states()">
                 <option value="" disabled selected>select</option>
                 @foreach($countries as $country)
-                <option class="btn-check" name="country" value="{{ $country->id }}">{{ $country->short_name }}</option>
+                <option class="btn-check" name="country" value="{{ $country->id }}">{{ $country->name }}</option>
                 @endforeach
             </select>
 

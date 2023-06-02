@@ -24,14 +24,14 @@ class LocationController extends Controller {
 
         foreach($countries as $country) {
             $state_controller = new StateController();
-            $state_controller->store($country->name);
+            $state_controller->store($country->geoname_id);
         }
 
         $states = State::all();
 
         foreach($states as $state) {
             $city_controller = new CityController();
-            $city_controller->store($state->name);
+            $city_controller->store($state->geoname_id);
         }
     }
 
@@ -39,7 +39,7 @@ class LocationController extends Controller {
         $country = new Country();
         if(!$country->exists()) $this->store_all_locations();
 
-        $countries = Country::orderBy('short_name', 'asc')->get();
+        $countries = Country::orderBy('name', 'asc')->get();
     
         if ($request->wantsJson()) {
             return response()->json([
@@ -50,6 +50,10 @@ class LocationController extends Controller {
         }
 
         return view('location_form', ['countries' => $countries, 'states' => State::orderBy('name', 'asc')->get(), 'cities' => City::orderBy('name', 'asc')->get()]);
+    }
+
+    public function get_countries() {
+        return response()->json(Country::all());
     }
 
     public function get_states(int $country_id) {

@@ -115,6 +115,11 @@ if(city_id) {
             flag.src = country.flag;
             let body = document.querySelector('body');
             body.appendChild(flag);
+
+            let phone_code = document.createElement('div');
+            phone_code.id = 'phone_code';
+            phone_code.innerHTML = country.phone_code;
+            body.appendChild(phone_code);
         })
         .catch(error => {
             console.log(error);

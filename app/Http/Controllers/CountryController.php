@@ -14,71 +14,47 @@ use GuzzleHttp\Client;
 
 class CountryController extends Controller {
     public function store() {
-        $client_token = new Client();
+        $username = 'sofiam';
 
-        // get api_token
-        $response_token = $client_token->request('GET', 'https://www.universal-tutorial.com/api/getaccesstoken', [
-            'headers' => [
-                'Accept' => 'application/json',
-                'api-token' => 'eh61RL3cO4dYIu7ZtT3SXL67rUDxYl5Dv9rScsBi9MZkF3paI4-NJAQT6cLyWNW3q5s',
-                'user-email' => 'sofia.smoura.sm@gmail.com'
-            ],
-            'verify' => "C:\Users\sofia\Downloads\cacert.pem"
-        ]);
+        // get countries array
+        $response_countries = Http::get("http://api.geonames.org/countryInfoJSON?username={$username}");
+        $countries = $response_countries->json();
 
-        $data = json_decode($response_token->getBody());
-
-        $ut_token = $data->auth_token;
-
-        // and get its states
-        $url = 'https://www.universal-tutorial.com/api/countries/';
-
-        $ut_headers = array(
-            'Content-Type: application/json',
-            'Accept: application/json',
-            'Email: sofia.smoura.sm@gmail.com',
-            'Authorization: Bearer '.$ut_token
-        );
-        $options = array(
-            CURLOPT_URL => $url,
-            CURLOPT_HTTPHEADER => $ut_headers,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_ENCODING => "",
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 30,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => "GET",
-        );
-        $curl = curl_init();
-        curl_setopt($curl, CURLOPT_CAINFO, "C:\Users\sofia\Downloads\cacert.pem");
-        curl_setopt_array($curl, $options);
-        $response = curl_exec($curl);
-        if (curl_errno($curl)) {
-            echo 'Error: ' . curl_error($curl);
-            exit;
-        }
-        curl_close($curl);
-        $countries_array = json_decode($response, true);
+        // get phone codes array
+        $response_codes = Http::get("http://country.io/phone.json");
+        $phone_codes = $response_codes->json();
 
         // get each country name and flag
-        $response = Http::withOptions([
+        $response_flags = Http::withOptions([
             'verify' => true,
             'curl' => [
                 CURLOPT_CAINFO => "C:\Users\sofia\Downloads\cacert.pem",
             ],
         ])->get('https://restcountries.com/v3.1/all?fields=name,flags');
+        $flags = $response_flags->json();
+        
+        // save each country and infos
+        foreach ($countries as $countries_array) {
+            if(is_array($countries_array)) {
+                foreach($countries_array as $country) {
+                    if(isset($country['countryName'])) {
+                        $name = $country['countryName'];
+                        $short_name = $country['countryCode'];
+                        $flag = "No flag";
+                        $phone_code = $phone_codes[$short_name];
 
-        // for each country
-         foreach($response->json() as $country) {
-            // save name and flag
-            $name = $country['name']['official'];
-            $short_name = $country['name']['common'];
-            $flag = $country['flags']['png'];
-            
-            $existing_country = Country::where('name', $name)->first();
-            if (!$existing_country) {
-                DB::insert('INSERT INTO country (name, short_name, phone_code, flag) VALUES (?, ?, "+351", ?)', [$name, $short_name, $flag]);
+                        foreach($flags as $flag) {
+                            if($flag['name']['common'] == $name) {
+                                $flag = $flag['flags']['png'];
+                            }                            
+                        }
+
+                        $existing_country = Country::where('name', $name)->first();
+                        if (!$existing_country) {
+                            DB::insert('INSERT INTO country (name, short_name, phone_code, flag, geoname_id) VALUES (?, ?, ?, ?, ?)', [$name, $short_name, $phone_code, $flag, $geoname_id]);
+                        }
+                    } 
+                }
             }
         }
     }
