@@ -14,7 +14,7 @@ use GuzzleHttp\Client;
 
 class CountryController extends Controller {
     public function store() {
-        $username = 'sofiam';
+        $username = 'mariaaa';
 
         // get countries array
         $response_countries = Http::get("http://api.geonames.org/countryInfoJSON?username={$username}");
@@ -33,6 +33,7 @@ class CountryController extends Controller {
         ])->get('https://restcountries.com/v3.1/all?fields=name,flags');
         $flags = $response_flags->json();
         
+        
         // save each country and infos
         foreach ($countries as $countries_array) {
             if(is_array($countries_array)) {
@@ -41,7 +42,13 @@ class CountryController extends Controller {
                         $name = $country['countryName'];
                         $short_name = $country['countryCode'];
                         $country_flag = "No flag";
-                        $phone_code = $phone_codes[$short_name];
+                        if($phone_codes[$short_name] == "")
+                            $phone_code = "";
+                        else if($phone_codes[$short_name][0] != '+')
+                            $phone_code = '+' . $phone_codes[$short_name];
+                        else
+                            $phone_code = $phone_codes[$short_name];
+
                         $geoname_id = intval($country['geonameId']);
                         foreach($flags as $flag) {
                             if($flag['name']['common'] == $name) {
@@ -49,11 +56,12 @@ class CountryController extends Controller {
                             }                            
                         }
 
-                        
-                        $existing_country = Country::where('name', $name)->first();
+                        DB::update('UPDATE country SET phone_code = ? WHERE name = ? AND short_name = ?', [$phone_code, $name, $short_name]);
+            
+                        /* $existing_country = Country::where('name', $name)->first();
                         if (!$existing_country) {
                             DB::insert('INSERT INTO country (name, short_name, phone_code, flag, geoname_id) VALUES (?, ?, ?, ?, ?)', [$name, $short_name, $phone_code, $country_flag, $geoname_id]);
-                        }
+                        } */
                     } 
                 }
             }
