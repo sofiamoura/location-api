@@ -89,4 +89,18 @@ class LocationController extends Controller {
 
         return response()->json($state);
     }
+
+    public function get_timezone(int $city_id) {
+        $city = City::find($city_id);
+
+        $city_controller = new CityController();
+        if($city->timezone_name == "") {
+            $city_controller->store_timezone($city->lat, $city->lng);
+            $city = City::find($city_id);
+        }
+
+        $timezone = [$city->timezone_name, $city->timezone_offset];
+
+        return response()->json($timezone);
+    }
 }

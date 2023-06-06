@@ -19,7 +19,7 @@ class CountryController extends Controller {
         // get countries array
         $response_countries = Http::get("http://api.geonames.org/countryInfoJSON?username={$username}");
         $countries = $response_countries->json();
-
+        
         // get phone codes array
         $response_codes = Http::get("http://country.io/phone.json");
         $phone_codes = $response_codes->json();
@@ -40,18 +40,19 @@ class CountryController extends Controller {
                     if(isset($country['countryName'])) {
                         $name = $country['countryName'];
                         $short_name = $country['countryCode'];
-                        $flag = "No flag";
+                        $country_flag = "No flag";
                         $phone_code = $phone_codes[$short_name];
-
+                        $geoname_id = intval($country['geonameId']);
                         foreach($flags as $flag) {
                             if($flag['name']['common'] == $name) {
-                                $flag = $flag['flags']['png'];
+                                $country_flag = $flag['flags']['png'];
                             }                            
                         }
 
+                        
                         $existing_country = Country::where('name', $name)->first();
                         if (!$existing_country) {
-                            DB::insert('INSERT INTO country (name, short_name, phone_code, flag, geoname_id) VALUES (?, ?, ?, ?, ?)', [$name, $short_name, $phone_code, $flag, $geoname_id]);
+                            DB::insert('INSERT INTO country (name, short_name, phone_code, flag, geoname_id) VALUES (?, ?, ?, ?, ?)', [$name, $short_name, $phone_code, $country_flag, $geoname_id]);
                         }
                     } 
                 }

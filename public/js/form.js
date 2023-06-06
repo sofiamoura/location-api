@@ -95,6 +95,20 @@ if(city_id) {
         // update country dropdown
         state_select.value = state.id;  
         
+        let prev_flag = document.getElementById('flag');
+        if (prev_flag) {
+            prev_flag.parentNode.removeChild(prev_flag);
+        }
+        let body = document.querySelector('body');
+        let prev_timezone_name = document.getElementById('timezone_name');
+        if (prev_timezone_name) {
+            prev_timezone_name.parentNode.removeChild(prev_timezone_name);
+        }
+        let prev_timezone_offset = document.getElementById('timezone_offset');
+        if (prev_timezone_offset) {
+            prev_timezone_offset.parentNode.removeChild(prev_timezone_offset);
+        }
+
         // get request to retrieve its country
         axios.get('/get_country/' + state.id)
         .then(response => {
@@ -106,20 +120,40 @@ if(city_id) {
             // update country dropdown
             country_select.value = country.id;        
             
-            let prev_flag = document.getElementById('flag');
-            if (prev_flag) {
-                prev_flag.parentNode.removeChild(prev_flag);
-            }
             let flag = document.createElement('img');
             flag.id = 'flag';
             flag.src = country.flag;
             let body = document.querySelector('body');
             body.appendChild(flag);
 
-            let phone_code = document.createElement('div');
+
+            let prev_phone_code = document.getElementById('phone_code');
+            if (prev_phone_code) {
+                prev_phone_code.parentNode.removeChild(prev_phone_code);
+            }
+            let phone_code = document.createElement('p');
             phone_code.id = 'phone_code';
             phone_code.innerHTML = country.phone_code;
             body.appendChild(phone_code);
+        })
+        .catch(error => {
+            console.log(error);
+        });
+
+        // get request to retrieve itself
+        axios.get('/get_timezone/' + city_id)
+        .then(response => {
+            let timezone_name = response.data[0];
+            let timezone_offset = response.data[1];
+
+            let timezone_name_tag = document.createElement('p');
+            let timezone_offset_tag = document.createElement('p');
+            timezone_name_tag.id = 'timezone_name';
+            timezone_offset_tag.id = 'timezone_offset';
+            timezone_name_tag.innerHTML = timezone_name;
+            timezone_offset_tag.innerHTML = timezone_offset;
+            body.appendChild(timezone_name_tag);
+            body.appendChild(timezone_offset_tag);
         })
         .catch(error => {
             console.log(error);
