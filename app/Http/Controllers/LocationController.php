@@ -37,7 +37,7 @@ class LocationController extends Controller {
 
     public function get_locations(Request $request) {
         $country = new Country();
-        /* if(!$country->exists()) */ $this->store_all_locations();
+        if(!$country->exists()) $this->store_all_locations();
 
         $countries = Country::orderBy('name', 'asc')->get();
     
