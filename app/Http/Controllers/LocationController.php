@@ -22,7 +22,7 @@ class LocationController extends Controller {
         $country_controller->store();
         $countries = Country::all();
 
-        /* foreach($countries as $country) {
+        foreach($countries as $country) {
             $state_controller = new StateController();
             $state_controller->store($country->geoname_id);
         }
@@ -32,7 +32,7 @@ class LocationController extends Controller {
         foreach($states as $state) {
             $city_controller = new CityController();
             $city_controller->store($state->geoname_id);
-        } */
+        }
     }
 
     public function get_locations(Request $request) {

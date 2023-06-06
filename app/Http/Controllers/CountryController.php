@@ -56,12 +56,10 @@ class CountryController extends Controller {
                             }                            
                         }
 
-                        DB::update('UPDATE country SET phone_code = ? WHERE name = ? AND short_name = ?', [$phone_code, $name, $short_name]);
-            
-                        /* $existing_country = Country::where('name', $name)->first();
+                        $existing_country = Country::where('name', $name)->first();
                         if (!$existing_country) {
                             DB::insert('INSERT INTO country (name, short_name, phone_code, flag, geoname_id) VALUES (?, ?, ?, ?, ?)', [$name, $short_name, $phone_code, $country_flag, $geoname_id]);
-                        } */
+                        }
                     } 
                 }
             }
