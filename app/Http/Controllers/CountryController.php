@@ -14,7 +14,7 @@ use GuzzleHttp\Client;
 
 class CountryController extends Controller {
     public function store() {
-        $username = 'mariaaa';
+        $username = 'sofiam';
 
         // get countries array
         $response_countries = Http::get("http://api.geonames.org/countryInfoJSON?username={$username}");
