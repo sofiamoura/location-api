@@ -28,14 +28,18 @@ class StateController extends Controller {
                     if(isset($state['name'])) {
                         $existing_state = State::where('name', $state['name'])->where('id_country', $id_country)->first();
                         if (!$existing_state) {
-                            DB::insert('INSERT INTO state (name, id_country, geoname_id) VALUES (?, ?, ?)', [$state['name'], $id_country, $state['geonameId']]);
+                            State::create([
+                                'name' => $state['name'],
+                                'id_country' => $id_country,
+                                'geoname_id' => $state['geonameId'],
+                            ]);
                         }
                     }
                 }
             }
         }
         
-        if($states == []) {
+        if(empty($states)) {
             return [];
         }
     }

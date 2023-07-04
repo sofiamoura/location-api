@@ -99,7 +99,6 @@ if(city_id) {
         if (prev_flag) {
             prev_flag.parentNode.removeChild(prev_flag);
         }
-        let body = document.querySelector('body');
         let prev_timezone_name = document.getElementById('timezone_name');
         if (prev_timezone_name) {
             prev_timezone_name.parentNode.removeChild(prev_timezone_name);
@@ -146,9 +145,10 @@ if(city_id) {
             let timezone_name = response.data[0];
             let timezone_offset = response.data[1];
 
+            let body = document.querySelector('body');
             let timezone_name_tag = document.createElement('p');
             let timezone_offset_tag = document.createElement('p');
-            timezone_name_tag.id = 'timezone_name';
+            timezone_name_tag.id = 'timezone_name'; 
             timezone_offset_tag.id = 'timezone_offset';
             timezone_name_tag.innerHTML = timezone_name;
             timezone_offset_tag.innerHTML = timezone_offset;

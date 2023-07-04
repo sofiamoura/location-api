@@ -10,11 +10,9 @@ use App\Models\Country;
 use App\Models\State;
 use App\Models\City;
 
-use GuzzleHttp\Client;
-
 class CountryController extends Controller {
     public function store() {
-        $username = 'mariaaa';
+        $username = 'sofiam';
 
         // get countries array
         $response_countries = Http::get("http://api.geonames.org/countryInfoJSON?username={$username}");
@@ -51,14 +49,21 @@ class CountryController extends Controller {
 
                         $geoname_id = intval($country['geonameId']);
                         foreach($flags as $flag) {
-                            if($flag['name']['common'] == $name) {
+                            if($flag['name']['common'] === $name) {
                                 $country_flag = $flag['flags']['png'];
+                                break;
                             }                            
                         }
 
                         $existing_country = Country::where('name', $name)->first();
                         if (!$existing_country) {
-                            DB::insert('INSERT INTO country (name, short_name, phone_code, flag, geoname_id) VALUES (?, ?, ?, ?, ?)', [$name, $short_name, $phone_code, $country_flag, $geoname_id]);
+                            Country::create([
+                                'name' => $name,
+                                'short_name' => $short_name,
+                                'phone_code' => $phone_code,
+                                'flag' => $country_flag,
+                                'geoname_id' => intval($country['geonameId']),
+                            ]);
                         }
                     } 
                 }

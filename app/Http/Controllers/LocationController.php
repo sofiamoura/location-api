@@ -14,11 +14,9 @@ use App\Http\Controllers\CountryController;
 use App\Http\Controllers\StateController;
 use App\Http\Controllers\CityController;
 
-use GuzzleHttp\Client;
-
 class LocationController extends Controller {
     public function store_all_locations() {
-        $country_controller = new CountryController();
+        /* $country_controller = new CountryController();
         $country_controller->store();
         $countries = Country::all();
 
@@ -32,7 +30,13 @@ class LocationController extends Controller {
         foreach($states as $state) {
             $city_controller = new CityController();
             $city_controller->store($state->geoname_id);
-        }
+        } */
+            
+        /* $cities = City::all();
+        $city_controller = new CityController();
+        foreach($cities as $city) {
+            $city_controller->store_timezone($city->id, $city->lat, $city->lng);
+        } */
     }
 
     public function get_locations(Request $request) {
@@ -58,7 +62,7 @@ class LocationController extends Controller {
 
     public function get_states(int $country_id) {
         $state = new State();
-        if(!$state->exists()) $this->store_all_locations();
+        /* if(!$state->exists()) */ $this->store_all_locations();
 
         $country = Country::find($country_id);
         $states = $country->states();
@@ -68,7 +72,7 @@ class LocationController extends Controller {
 
     public function get_cities(int $state_id) {
         $city = new City();
-        if(!$city->exists()) $this->store_all_locations();
+        /* if(!$city->exists()) */ $this->store_all_locations();
 
         $state = State::find($state_id);
         $cities = $state->cities();
@@ -95,7 +99,7 @@ class LocationController extends Controller {
 
         $city_controller = new CityController();
         if($city->timezone_name == "") {
-            $city_controller->store_timezone($city->lat, $city->lng);
+            $city_controller->store_timezone($city->id, $city->lat, $city->lng);
             $city = City::find($city_id);
         }
 

@@ -24,6 +24,3 @@ Route::get('get_cities/{state_id}', [LocationController::class, 'get_cities']);
 Route::get('/get_country/{state_id}', [LocationController::class, 'get_country']);
 Route::get('/get_state/{city_id}', [LocationController::class, 'get_state']);
 Route::get('/get_timezone/{city_id}', [LocationController::class, 'get_timezone']);
-
-
-Route::get('/get_timezone/{city_id}', [LocationController::class, 'get_timezone']);

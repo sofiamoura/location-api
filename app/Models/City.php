@@ -13,7 +13,7 @@ class City extends Model
     protected $table = 'city';
 
     protected $fillable = [
-        'id', 'name', 'lat', 'lng', 'timezone_name', 'timezone_offset', 'geoname_id', 'id_state'
+        'id', 'name', 'lat', 'lng', 'timezone_name', 'timezone_code', 'timezone_offset', 'geoname_id', 'id_state'
     ];
 
     use HasFactory;
